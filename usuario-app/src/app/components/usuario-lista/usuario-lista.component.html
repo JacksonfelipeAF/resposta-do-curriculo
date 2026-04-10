@@ -1,0 +1,144 @@
+<!-- Template do componente de lista de usuários com Material Design -->
+
+<div class="container">
+  <div class="header">
+    <h1>Lista de Usuários</h1>
+
+    <!-- Campo de busca com debounce -->
+    <div class="search-container">
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Buscar por nome ou e-mail</mat-label>
+        <input
+          matInput
+          type="text"
+          [formControl]="buscaControl"
+          placeholder="Digite para buscar..."
+        />
+        <mat-icon matSuffix>search</mat-icon>
+        <mat-hint
+          *ngIf="
+            buscaForm.get('busca')?.dirty && buscaForm.get('busca')?.invalid
+          "
+        >
+          Mínimo 2 caracteres
+        </mat-hint>
+      </mat-form-field>
+
+      <!-- Botão de adicionar usuário -->
+      <button
+        mat-fab
+        color="warn"
+        class="add-button"
+        (click)="abrirModalCriar()"
+        aria-label="Adicionar novo usuário"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Estado de loading -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+    <p>Carregando usuários...</p>
+  </div>
+
+  <!-- Estado de erro -->
+  <div class="error-container" *ngIf="hasError && !isLoading">
+    <mat-icon class="error-icon">error</mat-icon>
+    <h3>Ocorreu um erro</h3>
+    <p>{{ error() }}</p>
+    <button mat-raised-button color="primary" (click)="retryCarregar()">
+      Tentar novamente
+    </button>
+  </div>
+
+  <!-- Lista de usuários -->
+  <div class="users-container" *ngIf="!isLoading && !hasError">
+    <!-- Contador de resultados -->
+    <div class="results-info" *ngIf="hasUsuarios">
+      <span *ngIf="searchTerm()">
+        {{ filteredCount }} resultado(s) para "{{ searchTerm() }}"
+      </span>
+      <span *ngIf="!searchTerm()">
+        {{ usuarios().length }} usuário(s) cadastrado(s)
+      </span>
+    </div>
+
+    <!-- Grid de cards de usuários -->
+    <div class="users-grid" *ngIf="filteredCount > 0">
+      @for (usuario of usuariosFiltrados(); track usuario.id) {
+        <mat-card class="user-card">
+          <mat-card-header>
+            <div mat-card-avatar class="user-avatar">
+              {{ usuario.nome.charAt(0).toUpperCase() }}
+            </div>
+            <mat-card-title>{{ usuario.nome }}</mat-card-title>
+            <mat-card-subtitle>{{ usuario.email }}</mat-card-subtitle>
+          </mat-card-header>
+
+          <mat-card-content>
+            <div class="user-details">
+              <div class="detail-item">
+                <mat-icon class="detail-icon">badge</mat-icon>
+                <span>CPF: {{ usuario.cpf }}</span>
+              </div>
+
+              <div class="detail-item">
+                <mat-icon class="detail-icon">phone</mat-icon>
+                <span>{{ usuario.telefone }}</span>
+                <mat-chip
+                  [color]="getPhoneTypeColor(usuario.tipoTelefone)"
+                  selected
+                  class="phone-type"
+                >
+                  {{ usuario.tipoTelefone }}
+                </mat-chip>
+              </div>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions align="end">
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="abrirModalEditar(usuario)"
+              aria-label="Editar usuário"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+
+            <button
+              mat-icon-button
+              color="warn"
+              (click)="excluirUsuario(usuario)"
+              aria-label="Excluir usuário"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      } @empty {
+        <!-- Estado vazio -->
+        <div class="empty-state">
+          <mat-icon class="empty-icon">person_search</mat-icon>
+          <h3 *ngIf="searchTerm()">Nenhum usuário encontrado</h3>
+          <h3 *ngIf="!searchTerm()">Nenhum usuário cadastrado</h3>
+          <p *ngIf="searchTerm()">
+            Tente buscar com outros termos ou
+            <button
+              mat-button
+              color="primary"
+              (click)="buscaForm.get('busca')?.setValue('')"
+            >
+              limpar a busca
+            </button>
+          </p>
+          <p *ngIf="!searchTerm()">
+            Clique no botão vermelho para adicionar seu primeiro usuário
+          </p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

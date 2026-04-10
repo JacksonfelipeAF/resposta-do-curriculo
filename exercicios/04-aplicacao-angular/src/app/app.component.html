@@ -1,0 +1,93 @@
+<!-- Template principal da aplicação com Material Design -->
+
+<mat-sidenav-container class="app-container">
+  <!-- Toolbar principal -->
+  <mat-toolbar color="primary" class="app-toolbar">
+    <button 
+      mat-icon-button 
+      (click)="sidenav.toggle()"
+      *ngIf="isHandset$ | async">
+      <mat-icon>menu</mat-icon>
+    </button>
+    
+    <span class="toolbar-title">
+      <mat-icon class="toolbar-icon">people</mat-icon>
+      {{ title }}
+    </span>
+    
+    <span class="toolbar-spacer"></span>
+    
+    <button mat-icon-button class="toolbar-button">
+      <mat-icon>notifications</mat-icon>
+    </button>
+    
+    <button mat-icon-button class="toolbar-button">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <!-- Sidebar (menu lateral) -->
+  <mat-sidenav 
+    #sidenav 
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="!(isHandset$ | async)"
+    class="app-sidenav">
+    
+    <div class="sidenav-header">
+      <div class="user-info">
+        <div class="user-avatar">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="user-details">
+          <h3>Administrador</h3>
+          <p>admin@sistema.com</p>
+        </div>
+      </div>
+    </div>
+    
+    <mat-nav-list class="nav-list">
+      <a mat-list-item routerLink="/" class="nav-item active">
+        <mat-icon class="nav-icon">dashboard</mat-icon>
+        <span>Dashboard</span>
+      </a>
+      
+      <a mat-list-item routerLink="/usuarios" class="nav-item">
+        <mat-icon class="nav-icon">people</mat-icon>
+        <span>Usuários</span>
+      </a>
+      
+      <a mat-list-item routerLink="/relatorios" class="nav-item">
+        <mat-icon class="nav-icon">assessment</mat-icon>
+        <span>Relatórios</span>
+      </a>
+      
+      <a mat-list-item routerLink="/configuracoes" class="nav-item">
+        <mat-icon class="nav-icon">settings</mat-icon>
+        <span>Configurações</span>
+      </a>
+    </mat-nav-list>
+    
+    <div class="sidenav-footer">
+      <mat-divider></mat-divider>
+      <a mat-list-item class="nav-item logout">
+        <mat-icon class="nav-icon">logout</mat-icon>
+        <span>Sair</span>
+      </a>
+    </div>
+  </mat-sidenav>
+
+  <!-- Conteúdo principal -->
+  <mat-sidenav-content class="main-content">
+    <div class="content-wrapper">
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <span class="breadcrumb-item">Início</span>
+        <mat-icon class="breadcrumb-separator">chevron_right</mat-icon>
+        <span class="breadcrumb-item current">Usuários</span>
+      </div>
+      
+      <!-- Componente de lista de usuários -->
+      <app-usuario-lista></app-usuario-lista>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

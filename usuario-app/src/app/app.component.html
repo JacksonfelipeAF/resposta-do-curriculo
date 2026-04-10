@@ -1,0 +1,29 @@
+<!-- Template principal da aplicação com Material Design -->
+
+<mat-sidenav-container class="app-container">
+  <!-- Toolbar principal -->
+  <mat-toolbar color="primary" class="app-toolbar">
+    <span class="toolbar-title">
+      <mat-icon class="toolbar-icon">people</mat-icon>
+      {{ title }}
+    </span>
+
+    <span class="toolbar-spacer"></span>
+
+    <button mat-icon-button class="toolbar-button">
+      <mat-icon>notifications</mat-icon>
+    </button>
+
+    <button mat-icon-button class="toolbar-button">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <!-- Conteúdo principal -->
+  <mat-sidenav-content class="main-content">
+    <div class="content-wrapper">
+      <!-- Componente de lista de usuários -->
+      <app-usuario-lista></app-usuario-lista>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
